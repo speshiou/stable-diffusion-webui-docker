@@ -45,6 +45,7 @@ COPY cog/build/requirements.txt /tmp/requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip pip install -r /tmp/requirements.txt
 RUN git clone --branch v1.7.0 https://github.com/AUTOMATIC1111/stable-diffusion-webui /src
 WORKDIR /src
+COPY init-env.py ./
+RUN python init-env.py
 EXPOSE 7860
-RUN python3 -c 'from modules import launch_utils; launch_utils.prepare_environment()'
 CMD ["python", "launch.py", "--xformers", "--listen", "--enable-insecure-extension-access", "--api", "--cors-allow-origins", "*"]
