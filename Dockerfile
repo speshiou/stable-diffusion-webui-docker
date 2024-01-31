@@ -46,6 +46,6 @@ RUN --mount=type=cache,target=/root/.cache/pip pip install -r /tmp/requirements.
 RUN git clone --branch v1.7.0 https://github.com/AUTOMATIC1111/stable-diffusion-webui /src
 WORKDIR /src
 COPY init-env.py ./
-RUN python init-env.py
+RUN python init-env.py --skip-torch-cuda-test
 EXPOSE 7860
 CMD ["python", "launch.py", "--xformers", "--listen", "--enable-insecure-extension-access", "--api", "--cors-allow-origins", "*"]
