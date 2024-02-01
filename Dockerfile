@@ -47,5 +47,6 @@ RUN git clone --branch v1.7.0 https://github.com/AUTOMATIC1111/stable-diffusion-
 WORKDIR /src
 COPY init-env.py ./
 RUN python init-env.py --skip-torch-cuda-test
+RUN rm -r extensions && ln -s /data/extensions extensions
 EXPOSE 7860
 CMD ["python", "launch.py", "--xformers", "--listen", "--enable-insecure-extension-access", "--api", "--cors-allow-origins", "*"]
