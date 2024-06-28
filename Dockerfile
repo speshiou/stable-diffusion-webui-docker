@@ -4,13 +4,13 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/usr/local/nvidia/lib64:/usr/local/nvidia/bin
 RUN --mount=type=cache,target=/var/cache/apt set -eux; \
-apt-get update -qq; \
-apt-get install -qqy --no-install-recommends curl; \
-rm -rf /var/lib/apt/lists/*; \
-TINI_VERSION=v0.19.0; \
-TINI_ARCH="$(dpkg --print-architecture)"; \
-curl -sSL -o /sbin/tini "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${TINI_ARCH}"; \
-chmod +x /sbin/tini
+	apt-get update -qq; \
+	apt-get install -qqy --no-install-recommends curl; \
+	rm -rf /var/lib/apt/lists/*; \
+	TINI_VERSION=v0.19.0; \
+	TINI_ARCH="$(dpkg --print-architecture)"; \
+	curl -sSL -o /sbin/tini "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-${TINI_ARCH}"; \
+	chmod +x /sbin/tini
 ENTRYPOINT ["/sbin/tini", "--"]
 ENV PATH="/root/.pyenv/shims:/root/.pyenv/bin:$PATH"
 RUN --mount=type=cache,target=/var/cache/apt apt-get update -qq && apt-get install -qqy --no-install-recommends \
@@ -45,6 +45,7 @@ COPY cog/build/requirements.txt /tmp/requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip pip install -r /tmp/requirements.txt
 RUN git clone --branch v1.7.0 https://github.com/AUTOMATIC1111/stable-diffusion-webui /src
 WORKDIR /src
+RUN git clone https://github.com/Bing-su/adetailer.git extensions/adetailer
 COPY init-env.py ./
 RUN python init-env.py --skip-torch-cuda-test
 EXPOSE 7860
